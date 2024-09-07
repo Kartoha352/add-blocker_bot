@@ -19,6 +19,24 @@ def add_link(message):
     else:
         bot.reply_to(message, "У вас недостаточно прав.")
 
+# Обработчик команды /checkwarns
+@bot.message_handler(commands=['warns'])
+def warns(message):
+    user_id = message.from_user.id
+    chat_id = message.chat.id
+    warns_count = manager.get_warning_count(user_id, chat_id)
+    bot.reply_to(message, f"У вас {warns_count} предупреждений.")
+
+# Обработчик команды /getlinks
+@bot.message_handler(commands=['getlinks'])
+def get_links(message):
+    chat_id = message.chat.id
+    links = manager.get_blocked_links(chat_id)
+    if links:
+        bot.reply_to(message, "Запрещённые ссылки:\n" + "\n".join(links))
+    else:
+        bot.reply_to(message, "Запрещённых ссылок нет.")
+
 # Функция для удаления запрещённой ссылки
 @bot.message_handler(commands=['dellink'])
 def del_link(message):
